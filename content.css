@@ -1,0 +1,384 @@
+/* 이 확장프로그램이 부여한 속성에만 적용하여 구글 캘린더의 일정 스타일을 보존합니다. */
+html.gcw-enabled {
+  --gcw-saturday-bg: var(--gcw-saturday-bg-raw, #fff1f2);
+  --gcw-saturday-text: var(--gcw-saturday-text-raw, #be123c);
+  --gcw-sunday-bg: var(--gcw-sunday-bg-raw, #ffe4e6);
+  --gcw-sunday-text: var(--gcw-sunday-text-raw, #b91c1c);
+}
+
+/* 월간 뷰: 하루를 나타내는 날짜별 영역 */
+html.gcw-enabled [role="main"] [data-gcw-day="sat"].gcw-day-surface,
+html.gcw-enabled main [data-gcw-day="sat"].gcw-day-surface {
+  background-color: var(--gcw-saturday-bg) !important;
+}
+html.gcw-enabled [role="main"] [data-gcw-day="sun"].gcw-day-surface,
+html.gcw-enabled main [data-gcw-day="sun"].gcw-day-surface {
+  background-color: var(--gcw-sunday-bg) !important;
+}
+
+/* 주간/월간의 요일 헤더와 날짜 숫자. 일정 이벤트의 색은 변경하지 않습니다. */
+html.gcw-enabled [role="main"] [data-gcw-header="sat"],
+html.gcw-enabled main [data-gcw-header="sat"] {
+  background-color: var(--gcw-saturday-bg) !important;
+  color: var(--gcw-saturday-text) !important;
+}
+html.gcw-enabled [role="main"] [data-gcw-header="sun"],
+html.gcw-enabled main [data-gcw-header="sun"] {
+  background-color: var(--gcw-sunday-bg) !important;
+  color: var(--gcw-sunday-text) !important;
+}
+html.gcw-enabled [role="main"] .gcw-date-label[data-gcw-day="sat"],
+html.gcw-enabled main .gcw-date-label[data-gcw-day="sat"] {
+  color: var(--gcw-saturday-text) !important;
+}
+html.gcw-enabled [role="main"] .gcw-date-label[data-gcw-day="sun"],
+html.gcw-enabled main .gcw-date-label[data-gcw-day="sun"] {
+  color: var(--gcw-sunday-text) !important;
+}
+/* 오늘 날짜에 별도의 강조 배경(예: 파란 원)이 있을 경우 기존 대비를 보호합니다. */
+html.gcw-enabled .gcw-date-label[aria-current="date"],
+html.gcw-enabled [aria-current="date"] .gcw-date-label {
+  color: inherit !important;
+}
+
+/* 주간 뷰: 날짜 열 배경용 비차단 오버레이. 클릭/드래그를 가로채지 않습니다. */
+.gcw-week-overlay {
+  position: fixed;
+  z-index: 3;
+  pointer-events: none !important;
+  border-radius: 0;
+  visibility: hidden;
+}
+html.gcw-enabled .gcw-week-overlay[data-gcw-day="sat"] {
+  background-color: var(--gcw-saturday-bg);
+  opacity: 0.38;
+}
+html.gcw-enabled .gcw-week-overlay[data-gcw-day="sun"] {
+  background-color: var(--gcw-sunday-bg);
+  opacity: 0.38;
+}
+/* 기본 구글 다크 모드에도 다크 프리셋이 적용되며, 일정 이벤트 색상은 그대로 둡니다. */
+html.gcw-enabled.gcw-weekend-dark-palette .gcw-week-overlay { opacity: 0.67; }
+
+/* 테마는 브라우저에만 적용됩니다. 일정 카드 고유색은 최대한 건드리지 않습니다. */
+html.gcw-theme-dark {
+  color-scheme: dark;
+  --gcw-page-bg: #141923;
+  --gcw-surface-bg: #202633;
+  --gcw-panel-bg: #252c3a;
+  --gcw-text: #e8edf6;
+  --gcw-muted: #a9b4c6;
+  --gcw-border: #394353;
+}
+html.gcw-theme-light {
+  color-scheme: light;
+  --gcw-page-bg: #f6f8fc;
+  --gcw-surface-bg: #ffffff;
+  --gcw-panel-bg: #ffffff;
+  --gcw-text: #252c3b;
+  --gcw-muted: #5a667b;
+  --gcw-border: #e1e6ee;
+}
+html:is(.gcw-theme-dark,.gcw-theme-light) body,
+html:is(.gcw-theme-dark,.gcw-theme-light) #yDmH0d {
+  background-color: var(--gcw-page-bg) !important;
+  color: var(--gcw-text) !important;
+}
+html:is(.gcw-theme-dark,.gcw-theme-light) :is(main,[role="main"],[role="navigation"],nav,aside,[role="complementary"],header) {
+  background-color: var(--gcw-surface-bg) !important;
+  color: var(--gcw-text) !important;
+}
+html:is(.gcw-theme-dark,.gcw-theme-light) :is([role="dialog"],[role="menu"],[role="listbox"]) {
+  background-color: var(--gcw-panel-bg) !important;
+  color: var(--gcw-text) !important;
+}
+html.gcw-theme-dark :is(main,[role="main"],aside,nav,[role="navigation"],[role="dialog"]) :is(input:not([type="color"]),textarea,select) {
+  color: var(--gcw-text);
+  background-color: var(--gcw-panel-bg);
+}
+/* 구글 일정 색상/아이콘을 일괄 색상 변환하지 않고, 일반 배경/문자만 보정합니다. */
+html.gcw-theme-dark :is([role="columnheader"],[role="rowheader"],[role="grid"],[role="row"],[role="gridcell"]):not([data-eventid]):not([data-eventchip]) {
+  border-color: var(--gcw-border) !important;
+}
+html.gcw-theme-dark :is([role="columnheader"],[role="rowheader"]):not([data-gcw-header]) {
+  color: var(--gcw-text) !important;
+}
+html.gcw-theme-light :is([role="columnheader"],[role="rowheader"]):not([data-gcw-header]) {
+  color: var(--gcw-text) !important;
+}
+/* v1.2.4 — 오늘 날짜 테두리 하이라이트. 월간 셀과 주간 헤더/열 모두 지원. */
+html.gcw-today-on {
+  --gcw-today-border: #1688c9;
+  --gcw-today-glow: #4ab3ef55;
+}
+html.gcw-today-on.gcw-today-dark {
+  --gcw-today-border: #67d6ff;
+  --gcw-today-glow: #38bdf888;
+}
+html.gcw-today-on .gcw-today-cell {
+  outline: 2px solid var(--gcw-today-border) !important;
+  outline-offset: -2px !important;
+  box-shadow: inset 0 0 0 1px var(--gcw-today-glow), 0 0 9px var(--gcw-today-glow) !important;
+  border-radius: 4px;
+}
+html.gcw-today-on .gcw-today-number {
+  outline: 2px solid var(--gcw-today-border) !important;
+  outline-offset: 2px !important;
+  border-radius: 5px;
+}
+html.gcw-today-on [data-gcw-header-today="1"] {
+  box-shadow: inset 0 0 0 2px var(--gcw-today-border), 0 0 7px var(--gcw-today-glow) !important;
+  border-radius: 4px;
+}
+.gcw-today-column-overlay {
+  position: fixed;
+  z-index: 4;
+  pointer-events: none !important;
+  border: 2px solid var(--gcw-today-border, #1688c9);
+  box-shadow: inset 0 0 9px var(--gcw-today-glow, #4ab3ef55);
+  border-radius: 3px;
+  visibility: hidden;
+  box-sizing: border-box;
+}
+html:not(.gcw-today-on) .gcw-today-column-overlay { visibility: hidden !important; }
+
+/* v1.2.7: 구글이 렌더링하는 카드 본체의 도형에 독립 레이어로 테두리를 표현.
+   움직이는 효과는 카드 자체가 아니라 ::after에서 실행되어 재탐색과 충돌하지 않습니다. */
+html.gcw-event-borders-on .gcw-event-surface[data-gcw-event-effect] {
+  box-sizing: border-box !important;
+}
+html.gcw-event-borders-on .gcw-event-surface[data-gcw-event-effect="solid"] {
+  box-shadow: inset 0 0 0 2px #ffe28a !important;
+}
+html.gcw-event-borders-on .gcw-event-surface[data-gcw-event-effect="dashed"] {
+  outline: 2px dashed #70d8ff !important; outline-offset: -2px !important;
+}
+html.gcw-event-borders-on .gcw-event-surface[data-gcw-event-effect="double"] {
+  box-shadow: inset 0 0 0 2px #d8a8ff, inset 0 0 0 5px #8f55bf99 !important;
+}
+/* 별도 레이어는 모든 시각효과가 카드 실제 테두리에 밀착되도록 inset:0 지정. */
+html.gcw-event-borders-on .gcw-event-surface:is([data-gcw-event-effect="neon"],[data-gcw-event-effect="pulse"],[data-gcw-event-effect="rainbow"],[data-gcw-event-effect="gold"])::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  display: block !important;
+  border-radius: inherit !important;
+  pointer-events: none !important;
+  box-sizing: border-box !important;
+  z-index: 3 !important;
+  border: 2px solid transparent;
+}
+html.gcw-event-borders-on .gcw-event-surface[data-gcw-event-effect="neon"]::after {
+  border-color:#70ffe0;
+  box-shadow:inset 0 0 0 1px #70ffe055,0 0 7px #3deec59c;
+}
+html.gcw-event-borders-on .gcw-event-surface[data-gcw-event-effect="pulse"]::after {
+  animation: gcw-ring-pulse 1.65s ease-in-out infinite !important;
+}
+html.gcw-event-borders-on .gcw-event-surface[data-gcw-event-effect="rainbow"]::after {
+  animation: gcw-ring-rainbow 2.4s linear infinite !important;
+}
+html.gcw-event-borders-on .gcw-event-surface[data-gcw-event-effect="gold"]::after {
+  animation: gcw-ring-gold 2.8s ease-in-out infinite !important;
+}
+@keyframes gcw-ring-pulse {
+  0%,100% { border-color:#ff7c99; box-shadow:inset 0 0 0 0 #ff769900,0 0 2px #fa659955; opacity:.65; }
+  50% { border-color:#ffd0dc; box-shadow:inset 0 0 0 2px #ff769988,0 0 12px 2px #fb7185da; opacity:1; }
+}
+@keyframes gcw-ring-rainbow {
+  0%,100% { border-color:#ff5f9e; box-shadow:inset 0 0 0 1px #ff5f9e55,0 0 5px #ff5f9e88; }
+  25% { border-color:#f8d96b; box-shadow:inset 0 0 0 1px #f8d96b55,0 0 5px #f8d96b88; }
+  50% { border-color:#54edcb; box-shadow:inset 0 0 0 1px #54edcb55,0 0 5px #54edcb88; }
+  75% { border-color:#7ea9ff; box-shadow:inset 0 0 0 1px #7ea9ff55,0 0 5px #7ea9ff88; }
+}
+@keyframes gcw-ring-gold {
+  0%,100% { border-color:#d9a53b; box-shadow:inset 0 0 0 1px #c28c3177,0 0 3px #d4a13855; }
+  50% { border-color:#ffe88c; box-shadow:inset 0 0 0 2px #ffd56b88,0 0 10px #ffbe3aaa; }
+}
+/* 우클릭 메뉴 안의 효과 미리보기에서도 움직이는 효과가 보입니다. */
+@keyframes gcw-border-pulse {
+  0%,100% { box-shadow:inset 0 0 0 2px #ffa5b5,0 0 2px #fb718566; }
+  50% { box-shadow:inset 0 0 0 3px #ff8aa8,0 0 12px 2px #fb7185db; }
+}
+@keyframes gcw-border-rainbow {
+  0%,100% { outline-color:#ff72ad; }
+  25% { outline-color:#ffe46e; }
+  50% { outline-color:#62edcd; }
+  75% { outline-color:#74adff; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html.gcw-event-borders-on .gcw-event-surface[data-gcw-event-effect]::after,
+  .gcw-border-menu-swatch { animation:none!important; }
+}
+
+/* 일정에서 우클릭 시 열리는 전용 메뉴 */
+.gcw-border-menu {
+  position: fixed; z-index: 2147483646;
+  width: min(270px, calc(100vw - 12px)); max-height: calc(100vh - 14px);
+  overflow-y: auto; overscroll-behavior: contain; box-sizing: border-box !important;
+  padding: 10px; border-radius: 13px; border: 1px solid #dfe4ec;
+  background: #fff; color: #202b3a;
+  box-shadow: 0 10px 28px #00000045;
+  font: 12px/1.4 Arial, 'Malgun Gothic', sans-serif;
+  color-scheme: light;
+}
+.gcw-border-menu[data-gcw-menu-dark="1"] {
+  background: #252c39; color: #e8edf6; border-color: #4c5769; color-scheme: dark;
+}
+.gcw-border-menu-title { font-size: 14px; font-weight: 750; margin: 2px 4px 3px; }
+.gcw-border-menu-caption { font-size: 10px; opacity: .72; padding: 0 4px 8px; }
+.gcw-border-menu-option {
+  display: flex !important; flex-direction: row !important; align-items: center !important;
+  gap: 9px; width: 100% !important; text-align: left !important;
+  border: 0 !important; border-radius: 9px !important; cursor: pointer;
+  background: transparent !important; color: inherit !important;
+  margin: 0 !important; padding: 7px 6px !important;
+  min-height: 41px; box-sizing: border-box !important;
+  font: inherit !important;
+}
+.gcw-border-menu-option:hover, .gcw-border-menu-option:focus-visible {
+  background: #e8eff9 !important; outline: none !important;
+}
+.gcw-border-menu[data-gcw-menu-dark="1"] .gcw-border-menu-option:hover,
+.gcw-border-menu[data-gcw-menu-dark="1"] .gcw-border-menu-option:focus-visible {
+  background: #3c4758 !important;
+}
+.gcw-border-menu-swatch {
+  flex: none; width: 29px; height: 27px; border-radius: 6px;
+  background: #475569; box-sizing: border-box;
+}
+.gcw-border-menu-swatch[data-gcw-sample="none"] { background: #475569; }
+.gcw-border-menu-swatch[data-gcw-sample="solid"] { box-shadow: inset 0 0 0 2px #ffe28a; }
+.gcw-border-menu-swatch[data-gcw-sample="dashed"] { outline: 2px dashed #70d8ff; outline-offset: -2px; }
+.gcw-border-menu-swatch[data-gcw-sample="double"] { box-shadow: inset 0 0 0 2px #d8a8ff,inset 0 0 0 5px #8f55bf99; }
+.gcw-border-menu-swatch[data-gcw-sample="neon"] { box-shadow: inset 0 0 0 2px #70ffe0,0 0 5px #3deec5aa; }
+.gcw-border-menu-swatch[data-gcw-sample="pulse"] { animation: gcw-border-pulse 1.8s ease-in-out infinite; }
+.gcw-border-menu-swatch[data-gcw-sample="rainbow"] { outline: 2px solid #ff72ad; outline-offset: -2px; animation: gcw-border-rainbow 3s linear infinite; }
+.gcw-border-menu-swatch[data-gcw-sample="gold"] { box-shadow: inset 0 0 0 2px #ffd56b,inset 0 0 0 4px #a36c1f99,0 0 5px #ffbe3a80; }
+.gcw-border-menu-option-text { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.gcw-border-menu-option-label { font-size: 12px; font-weight: 700; }
+.gcw-border-menu-option-desc { font-size: 10px; opacity: .68; margin-top: 1px; }
+.gcw-border-menu-check { flex: none; color: #e15b81; font-weight: bold; font-size: 14px; min-width: 12px; }
+.gcw-border-menu-hint { border-top: 1px solid #8994a72f; font-size: 10px; opacity: .65; padding: 9px 4px 2px; }
+@media (prefers-reduced-motion: reduce) {
+  .gcw-border-menu-swatch[data-gcw-sample="pulse"],
+  .gcw-border-menu-swatch[data-gcw-sample="rainbow"] { animation: none !important; }
+}
+
+/* 브라우저/Google UI가 내부 버튼에 적용하는 border-radius도 덮어쓰기 위해
+   실제 이벤트 배경 요소에만 형태를 적용합니다. */
+html .gcw-event-surface[data-gcw-event-shape="pill"] { border-radius: 999px !important; }
+html .gcw-event-surface[data-gcw-event-shape="round"] { border-radius: 11px !important; }
+html .gcw-event-surface[data-gcw-event-shape="square"] { border-radius: 2px !important; }
+html .gcw-event-surface[data-gcw-event-shape="diagonal"] { border-radius: 14px 3px 14px 3px !important; }
+html .gcw-event-surface[data-gcw-event-shape="left"] { border-radius: 14px 2px 2px 14px !important; }
+html .gcw-event-surface[data-gcw-event-shape="right"] { border-radius: 2px 14px 14px 2px !important; }
+.gcw-border-menu-swatch[data-gcw-shape-sample="pill"] { border-radius: 99px; }
+.gcw-border-menu-swatch[data-gcw-shape-sample="round"] { border-radius: 11px; }
+.gcw-border-menu-swatch[data-gcw-shape-sample="square"] { border-radius: 2px; }
+.gcw-border-menu-swatch[data-gcw-shape-sample="diagonal"] { border-radius: 14px 3px 14px 3px; }
+.gcw-border-menu-swatch[data-gcw-shape-sample="left"] { border-radius: 14px 2px 2px 14px; }
+.gcw-border-menu-swatch[data-gcw-shape-sample="right"] { border-radius: 2px 14px 14px 2px; }
+.gcw-border-menu { max-height: min(550px, calc(100vh - 20px)); overflow-y: auto; }
+.gcw-border-menu-title:not(:first-child) { border-top: 1px solid #8e9bad40; padding-top: 10px; margin-top: 9px; }
+
+/* v1.2.7: 시간 지정 일정의 앞쪽 점/표시 아이콘을 모양만 바꿉니다.
+   원래 캘린더의 색상은 유지하며 일정 제목과 시간에는 영향을 주지 않습니다. */
+html.gcw-event-dots-on [data-gcw-marker-shape],
+html.gcw-event-dots-on .gcw-event-dot-pseudo::before {
+  box-sizing:border-box !important;
+  transition:clip-path .16s ease, border-radius .16s ease !important;
+  flex-shrink:0 !important;
+}
+html.gcw-event-dots-on :is([data-gcw-marker-shape="square"]:not(.gcw-event-dot-pseudo),.gcw-event-dot-pseudo[data-gcw-marker-shape="square"]::before) { border-radius:1px!important; clip-path:none!important; }
+html.gcw-event-dots-on :is([data-gcw-marker-shape="diamond"]:not(.gcw-event-dot-pseudo),.gcw-event-dot-pseudo[data-gcw-marker-shape="diamond"]::before) { border-radius:0!important; clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)!important; }
+html.gcw-event-dots-on :is([data-gcw-marker-shape="triangle"]:not(.gcw-event-dot-pseudo),.gcw-event-dot-pseudo[data-gcw-marker-shape="triangle"]::before) { border-radius:0!important; clip-path:polygon(50% 0,100% 100%,0 100%)!important; }
+html.gcw-event-dots-on :is([data-gcw-marker-shape="star"]:not(.gcw-event-dot-pseudo),.gcw-event-dot-pseudo[data-gcw-marker-shape="star"]::before) { border-radius:0!important; clip-path:polygon(50% 0,62% 34%,98% 35%,70% 57%,79% 91%,50% 73%,21% 91%,30% 57%,2% 35%,38% 34%)!important; }
+html.gcw-event-dots-on :is([data-gcw-marker-shape="heart"]:not(.gcw-event-dot-pseudo),.gcw-event-dot-pseudo[data-gcw-marker-shape="heart"]::before) { border-radius:0!important; clip-path:polygon(50% 96%,9% 57%,0 37%,4% 17%,18% 4%,34% 5%,50% 22%,66% 5%,82% 4%,96% 17%,100% 37%,91% 57%)!important; }
+html.gcw-event-dots-on :is([data-gcw-marker-shape="sparkle"]:not(.gcw-event-dot-pseudo),.gcw-event-dot-pseudo[data-gcw-marker-shape="sparkle"]::before) { border-radius:0!important; clip-path:polygon(50% 0,63% 36%,100% 50%,63% 64%,50% 100%,37% 64%,0 50%,37% 36%)!important; }
+html.gcw-event-dots-on :is([data-gcw-marker-shape="ring"]:not(.gcw-event-dot-pseudo),.gcw-event-dot-pseudo[data-gcw-marker-shape="ring"]::before) {
+  border-radius:50%!important; clip-path:none!important;
+  -webkit-mask-image:radial-gradient(circle,transparent 0 39%,#000 43%)!important;
+  mask-image:radial-gradient(circle,transparent 0 39%,#000 43%)!important;
+}
+html.gcw-event-dots-on [data-gcw-marker-shape="circle"] {border-radius:50%!important;clip-path:none!important;}
+/* 메뉴의 미니 샘플 */
+.gcw-border-menu-swatch.gcw-dot-swatch { width:20px; height:20px; margin:0 5px; background:#368df7; }
+.gcw-border-menu-swatch.gcw-dot-swatch[data-gcw-shape-sample="inherit"] { background:linear-gradient(135deg,#7b8da5,#b6c4d6);border-radius:50%; }
+.gcw-dot-swatch[data-gcw-shape-sample="circle"] { border-radius:50%; }
+.gcw-dot-swatch[data-gcw-shape-sample="square"] { border-radius:2px; }
+.gcw-dot-swatch[data-gcw-shape-sample="diamond"] { border-radius:0;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%); }
+.gcw-dot-swatch[data-gcw-shape-sample="triangle"] { border-radius:0;clip-path:polygon(50% 0,100% 100%,0 100%); }
+.gcw-dot-swatch[data-gcw-shape-sample="star"] { border-radius:0;clip-path:polygon(50% 0,62% 34%,98% 35%,70% 57%,79% 91%,50% 73%,21% 91%,30% 57%,2% 35%,38% 34%); }
+.gcw-dot-swatch[data-gcw-shape-sample="heart"] { border-radius:0;clip-path:polygon(50% 96%,9% 57%,0 37%,4% 17%,18% 4%,34% 5%,50% 22%,66% 5%,82% 4%,96% 17%,100% 37%,91% 57%); }
+.gcw-dot-swatch[data-gcw-shape-sample="ring"] { border-radius:50%;-webkit-mask-image:radial-gradient(circle,transparent 0 39%,#000 43%);mask-image:radial-gradient(circle,transparent 0 39%,#000 43%); }
+.gcw-dot-swatch[data-gcw-shape-sample="sparkle"] { border-radius:0;clip-path:polygon(50% 0,63% 36%,100% 50%,63% 64%,50% 100%,37% 64%,0 50%,37% 36%); }
+
+/* v1.2.8: 실제 Google Calendar 점은 작은 원의 border-color(0x0 + 굵은 border)로 그려질 수 있습니다. */
+html.gcw-event-dots-on .gcw-event-dot-native.gcw-event-dot-border[data-gcw-marker-shape] {
+  box-sizing:border-box !important;
+  width:var(--gcw-dot-size,12px) !important;
+  height:var(--gcw-dot-size,12px) !important;
+  border:0 !important;
+  background-color:var(--gcw-dot-color) !important;
+  flex-shrink:0 !important;
+}
+html.gcw-event-dots-on .gcw-event-dot-native:not(.gcw-event-dot-border)[data-gcw-marker-shape] {
+  background-color:var(--gcw-dot-color) !important;
+}
+html.gcw-event-dots-on .gcw-event-dot-pseudo[data-gcw-marker-shape]::before {
+  box-sizing:border-box !important;
+  background-color:var(--gcw-dot-color) !important;
+  border:0 !important;
+  width:var(--gcw-dot-size,12px) !important;
+  height:var(--gcw-dot-size,12px) !important;
+}
+/* :is() 안에 ::before를 넣는 방식은 유효한 선택자가 아니므로 명시적으로 분리합니다. */
+html.gcw-event-dots-on .gcw-event-dot-pseudo[data-gcw-marker-shape="circle"]::before,
+html.gcw-event-dots-on .gcw-event-dot-native[data-gcw-marker-shape="circle"] {border-radius:50%!important;clip-path:none!important;mask-image:none!important;-webkit-mask-image:none!important;}
+html.gcw-event-dots-on .gcw-event-dot-pseudo[data-gcw-marker-shape="square"]::before,
+html.gcw-event-dots-on .gcw-event-dot-native[data-gcw-marker-shape="square"] {border-radius:1px!important;clip-path:none!important;mask-image:none!important;-webkit-mask-image:none!important;}
+html.gcw-event-dots-on .gcw-event-dot-pseudo[data-gcw-marker-shape="diamond"]::before,
+html.gcw-event-dots-on .gcw-event-dot-native[data-gcw-marker-shape="diamond"] {border-radius:0!important;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)!important;mask-image:none!important;-webkit-mask-image:none!important;}
+html.gcw-event-dots-on .gcw-event-dot-pseudo[data-gcw-marker-shape="triangle"]::before,
+html.gcw-event-dots-on .gcw-event-dot-native[data-gcw-marker-shape="triangle"] {border-radius:0!important;clip-path:polygon(50% 0,100% 100%,0 100%)!important;mask-image:none!important;-webkit-mask-image:none!important;}
+html.gcw-event-dots-on .gcw-event-dot-pseudo[data-gcw-marker-shape="star"]::before,
+html.gcw-event-dots-on .gcw-event-dot-native[data-gcw-marker-shape="star"] {border-radius:0!important;clip-path:polygon(50% 0,62% 34%,98% 35%,70% 57%,79% 91%,50% 73%,21% 91%,30% 57%,2% 35%,38% 34%)!important;mask-image:none!important;-webkit-mask-image:none!important;}
+html.gcw-event-dots-on .gcw-event-dot-pseudo[data-gcw-marker-shape="heart"]::before,
+html.gcw-event-dots-on .gcw-event-dot-native[data-gcw-marker-shape="heart"] {border-radius:0!important;clip-path:polygon(50% 96%,9% 57%,0 37%,4% 17%,18% 4%,34% 5%,50% 22%,66% 5%,82% 4%,96% 17%,100% 37%,91% 57%)!important;mask-image:none!important;-webkit-mask-image:none!important;}
+html.gcw-event-dots-on .gcw-event-dot-pseudo[data-gcw-marker-shape="sparkle"]::before,
+html.gcw-event-dots-on .gcw-event-dot-native[data-gcw-marker-shape="sparkle"] {border-radius:0!important;clip-path:polygon(50% 0,63% 36%,100% 50%,63% 64%,50% 100%,37% 64%,0 50%,37% 36%)!important;mask-image:none!important;-webkit-mask-image:none!important;}
+html.gcw-event-dots-on .gcw-event-dot-pseudo[data-gcw-marker-shape="ring"]::before,
+html.gcw-event-dots-on .gcw-event-dot-native[data-gcw-marker-shape="ring"] {border-radius:50%!important;clip-path:none!important;-webkit-mask-image:radial-gradient(circle,transparent 0 40%,#000 45%)!important;mask-image:radial-gradient(circle,transparent 0 40%,#000 45%)!important;}
+/* 한 화면에 세 가지 설정 그룹이 모두 보이는 3열 컴팩트 메뉴. */
+.gcw-border-menu.gcw-border-menu-gridmode {
+  width:min(785px,calc(100vw - 16px)) !important;
+  max-height:calc(100vh - 16px) !important;
+  padding:12px !important;overflow-y:auto;overflow-x:hidden;
+}
+.gcw-menu-topline {display:flex;justify-content:space-between;align-items:center;font-size:14px;padding:0 2px 9px;}
+.gcw-menu-close {width:24px;height:24px;border:0;background:transparent;color:inherit;font-size:23px;line-height:1;cursor:pointer;border-radius:5px;}
+.gcw-menu-close:hover {background:#91a0b02b;}
+.gcw-menu-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;align-items:start;}
+.gcw-menu-section {min-width:0;padding:7px;border:1px solid #8f9fb03d;border-radius:11px;}
+.gcw-menu-section-heading {font-size:12px;font-weight:750;padding:1px 4px;}
+.gcw-menu-section-desc {font-size:10px;opacity:.64;padding:0 4px 4px;}
+.gcw-border-menu-gridmode .gcw-border-menu-option {
+  display:flex!important;min-height:29px!important;height:29px!important;gap:7px!important;
+  padding:3px 5px!important;margin:0!important;white-space:nowrap;
+}
+.gcw-border-menu-gridmode .gcw-border-menu-swatch {width:24px;height:22px;flex:none;border-radius:5px;}
+.gcw-border-menu-gridmode .gcw-border-menu-swatch.gcw-dot-swatch {width:16px;height:16px;margin:0 4px;}
+.gcw-border-menu-gridmode .gcw-border-menu-option-label {font-size:11px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;}
+.gcw-border-menu-gridmode .gcw-border-menu-option[aria-pressed="true"] {background:#e9eefb !important;}
+.gcw-border-menu-gridmode[data-gcw-menu-dark="1"] .gcw-border-menu-option[aria-pressed="true"] {background:#3b4961 !important;}
+.gcw-menu-footer {font-size:10px;opacity:.65;border-top:1px solid #8f9fb037;padding:8px 2px 0;margin-top:9px;}
+@media (max-width:620px) {
+  .gcw-border-menu.gcw-border-menu-gridmode {width:calc(100vw - 12px)!important;padding:6px!important;}
+  .gcw-menu-grid {gap:3px;}
+  .gcw-menu-section {padding:3px;}
+  .gcw-border-menu-gridmode .gcw-border-menu-option {gap:3px!important;padding:3px 2px!important;}
+  .gcw-border-menu-gridmode .gcw-border-menu-swatch {width:17px;height:18px;}
+  .gcw-border-menu-gridmode .gcw-border-menu-option-label {font-size:10px;}
+  .gcw-border-menu-gridmode .gcw-border-menu-check {font-size:10px;min-width:8px;}
+}

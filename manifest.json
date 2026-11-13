@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "Google Calendar 커스터마이저",
+  "short_name": "캘린더 커스텀",
+  "description": "주말·테마, 오늘 날짜 강조, 일정 테두리·카드·시간 표시 모양 3열 메뉴",
+  "version": "1.2.8",
+  "permissions": [
+    "alarms",
+    "storage"
+  ],
+  "action": {
+    "default_title": "Google Calendar 커스터마이저 설정",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://calendar.google.com/*"
+      ],
+      "css": [
+        "content.css"
+      ],
+      "js": [
+        "content.js",
+        "event-borders.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "host_permissions": [
+    "https://api.github.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
